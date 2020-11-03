@@ -1,28 +1,27 @@
 import paramiko, time
 from termcolor import colored
-import urllib.request
+import requests
+from functions import SSH
+import scp
 
 def statusWebsite():
     url = "https://media.scheijvens.com"
 
-    code = urllib.request.urlopen(url).getcode()
-
-    if code == 200:
-        return colored("Active", "green")
+    status = requests.get(url)
+    if status.status_code == 200:
+        status_active = colored("Active", "green")
     else:
-        return colored("Inactive", "red")
+        status_active = colored("Inactive", "red")
+    return f"Status Website: {status_active}"
 
-
-
-def updateUbuntu(password):
+def updateUbuntu(user, password):
     host = "172.16.0.10"
     port = 22
-    username = "root"
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.load_system_host_keys()
-    ssh.connect(host, port, username, password)
+    ssh.connect(host, port, user, password)
 
     stdin, stdout, stderr = ssh.exec_command("sudo apt update && sudo apt upgrade -y")
     time.sleep(5)
@@ -30,15 +29,14 @@ def updateUbuntu(password):
     print(restult[-1])
     ssh.close()
 
-def systemJellyfin(password):
+def systemJellyfin(user, password):
     host = "172.16.0.10"
     port = 22
-    username = "root"
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.load_system_host_keys()
-    ssh.connect(host, port, username, password)
+    ssh.connect(host, port, user, password)
 
     parameter = ""
     option = input("Start, stop or restart?: ")
@@ -54,15 +52,14 @@ def systemJellyfin(password):
     stdin, stdout, stderr = ssh.exec_command(f"sudo service jellyfin {parameter}")
     ssh.close()
 
-def systemUbuntu(password):
+def systemUbuntu(user, password):
     host = "172.16.0.10"
     port = 22
-    username = "root"
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.load_system_host_keys()
-    ssh.connect(host, port, username, password)
+    ssh.connect(host, port, user, password)
 
     parameter = ""
     option = input("reboot or shutdown?: ")
@@ -75,3 +72,26 @@ def systemUbuntu(password):
 
     stdin, stdout, stderr = ssh.exec_command(f"sudo {parameter}")
     ssh.close()
+
+def getStatus(user, password):
+    host = "172.16.0.10"
+    port = 22
+
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.load_system_host_keys()
+    ssh.connect(host, port, user, password)
+    stdin, stdout, stderr = ssh.exec_command("service jellyfin status")
+    time.sleep(2)
+    result = stdout.readlines()
+    ssh.close()
+    result_activity = result[4]
+    result_activity = result_activity.split()
+    if result_activity[1] == "failed":
+        status_activity = colored(result[4].strip(), "red")
+    elif result_activity[1] == "active":
+        status_activity = colored(result[4].strip(), "green")
+    return f"Status Server:  {status_activity}"
+
+def uploadMovie():
+    Client =
