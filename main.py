@@ -38,7 +38,7 @@ while True:
         elif menu_result == "3":
             serverMenu.systemUbuntu(user, password)
         elif menu_result == "4":
-            print(colored("This option is not availible at the moment, we're working on it!\n", "red"))
+            serverMenu.uploadMovie(user, password)
         elif menu_result == "5":
             print(colored("This option is not availible at the moment, we're working on it!\n", "red"))
         elif menu_result == "6":
