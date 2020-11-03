@@ -1,11 +1,11 @@
 import paramiko, time
 from termcolor import colored
 
-def updateUbuntu():
+
+def updateUbuntu(password):
     host = "172.16.0.10"
     port = 22
     username = "root"
-    password = ""
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -16,11 +16,10 @@ def updateUbuntu():
     time.sleep(5)
     print(stdout.readlines())
 
-def systemJellyfin():
+def systemJellyfin(password):
     host = "172.16.0.10"
     port = 22
     username = "root"
-    password = ""
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -38,15 +37,12 @@ def systemJellyfin():
     else:
         print(colored("Not a valid option.\n", "red"))
 
-    stdin, stdout, stderr = ssh.exec_command(f"sudo service jeffyfin {parameter}")
-    time.sleep(5)
-    print(stdout.readlines())
+    stdin, stdout, stderr = ssh.exec_command(f"sudo service jellyfin {parameter}")
 
-def systemUbuntu():
+def systemUbuntu(password):
     host = "172.16.0.10"
     port = 22
     username = "root"
-    password = ""
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())

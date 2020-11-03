@@ -5,7 +5,7 @@ def sshConnection():
     host = "172.16.0.10"
     port = 22
     username = "administrator"
-    password = ""
+    password = "Sjiefkes120!"
 
 
     ssh = paramiko.SSHClient()

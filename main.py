@@ -2,11 +2,13 @@ import pyfiglet, time
 from termcolor import colored
 from functions import serverMenu, SSH
 import paramiko
+import getpass
+
 
 host = "172.16.0.10"
 port = 22
 username = "administrator"
-password = ""
+password = getpass.getpass('Please enter your password: ')
 
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -43,19 +45,19 @@ while True:
     while True:
         menu_result = input("Enter an option (1-8): ")
         if menu_result == "1":
-            serverMenu.updateUbuntu()
+            serverMenu.updateUbuntu(password)
         elif menu_result == "2":
-            serverMenu.systemJellyfin()
+            serverMenu.systemJellyfin(password)
         elif menu_result == "3":
-            print(3)
+            print("This option is not availible at the moment, whe're working on it!")
         elif menu_result == "4":
-            serverMenu.systemUbuntu()
+            serverMenu.systemUbuntu(password)
         elif menu_result == "5":
-            print(5)
+            print("This option is not availible at the moment, whe're working on it!")
         elif menu_result == "6":
-            print(6)
+            print("This option is not availible at the moment, whe're working on it!")
         elif menu_result == "7":
-            print(7)
+            print("This option is not availible at the moment, whe're working on it!")
         else:
             print(colored("Not a valid option.\n"
                         "Please try a number out of the menu.", "red"))
