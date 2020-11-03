@@ -1,44 +1,36 @@
-import pyfiglet, time
+import pyfiglet
+import time
 from termcolor import colored
 from functions import serverMenu, SSH
 import paramiko
 import getpass
 
-
-host = "172.16.0.10"
-port = 22
-username = "administrator"
 password = getpass.getpass('Please enter your password: ')
 
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.load_system_host_keys()
-ssh.connect(host, port, username, password)
-
-stdin, stdout, stderr = ssh.exec_command("service jellyfin status")
-time.sleep(2)
-status = stdout.readlines()
+status_server = SSH.getStatus(password)
+status_website = serverMenu.statusWebsite()
 
 while True:
+    print(75 * "-")
     ascii_banner = pyfiglet.figlet_format("MEDIA SERVER")
     print(ascii_banner)
 
-    status_server = f"{status[4]}"
-    status_webpage = ""
+    status_server = f"{status_server.strip()}"
+    status_webpage = f"{status_website}"
 
     print(75*"-")
-    print(f"Status Server: {status_server}\n"
-          f"Status Website: {status_webpage}")
+    print(f"Status Server:    {status_server}\n"
+          f"Status Website:   {status_webpage}")
     print(75*"-")
 
 
     print("\n1) Update Ubuntu OS\n"
           "2) Start/Stop/Restart Jellyfin Server\n"
-          "3) Change IP-address server\n"
-          "4) Shutdown/Reboot Ubuntu server\n"
-          "5) Upload movie\n"
-          "6) Upload serie\n"
-          "7) Upload book\n"
+          "3) Shutdown/Reboot Ubuntu server\n"
+          "4) Upload movie\n"
+          "5) Upload serie\n"
+          "6) Upload book\n"
+          "exit) Exit program"
     )
     print(75*"-")
 
@@ -48,6 +40,8 @@ while True:
             serverMenu.updateUbuntu(password)
         elif menu_result == "2":
             serverMenu.systemJellyfin(password)
+            print(colored(SSH.getStatus(password).strip(), ['green']))
+            print()
         elif menu_result == "3":
             print("This option is not availible at the moment, whe're working on it!")
         elif menu_result == "4":
@@ -58,6 +52,8 @@ while True:
             print("This option is not availible at the moment, whe're working on it!")
         elif menu_result == "7":
             print("This option is not availible at the moment, whe're working on it!")
+        elif menu_result == "exit":
+            True
         else:
             print(colored("Not a valid option.\n"
                         "Please try a number out of the menu.", "red"))

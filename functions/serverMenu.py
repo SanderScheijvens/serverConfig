@@ -1,5 +1,17 @@
 import paramiko, time
 from termcolor import colored
+import urllib.request
+
+def statusWebsite():
+    url = "https://media.scheijvens.com"
+
+    code = urllib.request.urlopen(url).getcode()
+
+    if code == 200:
+        return colored("Active", "green")
+    else:
+        return colored("Inactive", "red")
+
 
 
 def updateUbuntu(password):
@@ -14,7 +26,9 @@ def updateUbuntu(password):
 
     stdin, stdout, stderr = ssh.exec_command("sudo apt update && sudo apt upgrade -y")
     time.sleep(5)
-    print(stdout.readlines())
+    restult = stdout.readlines()
+    print(restult[-1])
+    ssh.close()
 
 def systemJellyfin(password):
     host = "172.16.0.10"
@@ -38,6 +52,7 @@ def systemJellyfin(password):
         print(colored("Not a valid option.\n", "red"))
 
     stdin, stdout, stderr = ssh.exec_command(f"sudo service jellyfin {parameter}")
+    ssh.close()
 
 def systemUbuntu(password):
     host = "172.16.0.10"
@@ -59,3 +74,4 @@ def systemUbuntu(password):
         print(colored("Not a valid option.\n", "red"))
 
     stdin, stdout, stderr = ssh.exec_command(f"sudo {parameter}")
+    ssh.close()
